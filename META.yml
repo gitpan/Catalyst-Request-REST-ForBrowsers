@@ -1,0 +1,23 @@
+---
+name: Catalyst-Request-REST-ForBrowsers
+version: 0.01
+author:
+  - 'Dave Rolsky, C<< <autarch@urth.org> >>'
+abstract: A Catalyst::Request::REST subclass for dealing with browsers
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Catalyst::Action::REST: 0.41
+  NEXT: 0
+build_requires:
+  HTTP::Headers: 0
+  Test::More: 0
+provides:
+  Catalyst::Request::REST::ForBrowsers:
+    file: lib/Catalyst/Request/REST/ForBrowsers.pm
+    version: 0.01
+generated_by: Module::Build version 0.2808
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

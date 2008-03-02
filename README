@@ -1,0 +1,82 @@
+NAME
+    Catalyst::Request::REST::ForBrowsers - A Catalyst::Request::REST
+    subclass for dealing with browsers
+
+SYNOPSIS
+        package MyApp;
+
+        MyApp->request_class( 'Catalyst::Request::REST::ForBrowsers' );
+
+DESCRIPTION
+    Writing RESTful apps is a good thing, but if you're also trying to
+    support web browsers, you're probably going to need some hackish
+    workarounds. This module provides those workarounds for you.
+
+    Specifically, it lets you do two things. First, it lets you "tunnel" PUT
+    and DELETE requests across a POST, since browser do not support PUT or
+    DELETE actions.
+
+    Second, it provides a heuristic to check if the client is a web browser,
+    regardless of what content types it claims to accept. The reason for
+    this is that while a browser might claim to accept the "application/xml"
+    content type, it's really not going to do anything useful with it, and
+    you're best off giving it HTML.
+
+METHODS
+    This class provides the following methods:
+
+  $request->method()
+    This method works just like "Catalyst::Request->method()" except it
+    allows for tunneling of PUT and DELETE requests via a POST.
+
+    Specifically, you can provide a form element named "x-tunneled-method"
+    which can override the request method for a POST. This *only* works for
+    a POST, not a GET.
+
+  $request->looks_like_browser()
+    This method provides a heuristic to say whether or not the request
+    appears to come from a browser. You can use this however you want. I
+    usually use it to determine whether or not to give the client a full
+    HTML page or some sort of serialized data.
+
+    This is a heuristic, and like any heuristic, it is probably wrong
+    sometimes. Here is how it works:
+
+    *   If the request includes a header "X-Request-With" set to either
+        "HTTP.Request" or "XMLHttpRequest", this returns false. The
+        assumption is that if you're doing XHR, you don't want the request
+        treated as if it comes from a browser.
+
+    *   If the client provides makes a GET request with a query string
+        parameter "content-type", and that type is *not* an HTML type, it is
+        *not* a browser.
+
+    *   If the client provides an Accept header which includes "*/*" as an
+        accepted content type, the client is a browser. Specifically, it is
+        IE7, which accepts "*/*" but not anything like "text/html".
+
+    *   If the client provides an Accept header and accepts either
+        "text/html" or "application/xhtml+xml" it is a browser.
+
+    *   Otherwise, if it provides an Accept header, it is *not* a browser.
+
+    *   The default is that the client is a browser.
+
+    This all works well for my apps, but read it carefully to make sure it
+    meets your expectations before using it.
+
+AUTHOR
+    Dave Rolsky, "<autarch@urth.org>"
+
+BUGS
+    Please report any bugs or feature requests to
+    "bug-catalyst-request-rest-forbrowsers@rt.cpan.org", or through the web
+    interface at <http://rt.cpan.org>. I will be notified, and then you'll
+    automatically be notified of progress on your bug as I make changes.
+
+COPYRIGHT & LICENSE
+    Copyright 2008 Dave Rolsky, All Rights Reserved.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
