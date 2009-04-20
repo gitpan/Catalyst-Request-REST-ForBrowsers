@@ -3,22 +3,25 @@ package Catalyst::Request::REST::ForBrowsers;
 use strict;
 use warnings;
 
-use NEXT;
-use base 'Catalyst::Request::REST';
+use MRO::Compat;
 
-our $VERSION = '0.01';
+use Moose;
+
+extends 'Catalyst::Request::REST';
+
+our $VERSION = '0.02';
 
 
 sub method
 {
     my $self = shift;
 
-    return $self->NEXT::method(@_)
+    return $self->next::method(@_)
         if @_;
 
     return $self->{__method} if $self->{__method};
 
-    my $method = $self->NEXT::method();
+    my $method = $self->next::method();
 
     return $method unless $method && uc $method eq 'POST';
 
@@ -61,6 +64,10 @@ sub method
         return 1;
     }
 }
+
+no Moose;
+
+__PACKAGE__->meta()->make_immutable( inline_constructor => __PACKAGE__->isa('Moose::Object') ? 1 : 0 );
 
 1;
 
@@ -128,9 +135,9 @@ it comes from a browser.
 
 =item *
 
-If the client provides makes a GET request with a query string
-parameter "content-type", and that type is I<not> an HTML type, it is
-I<not> a browser.
+If the client makes a GET request with a query string parameter
+"content-type", and that type is I<not> an HTML type, it is I<not> a
+browser.
 
 =item *
 
@@ -170,7 +177,7 @@ changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Dave Rolsky, All Rights Reserved.
+Copyright 2008-2009 Dave Rolsky, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

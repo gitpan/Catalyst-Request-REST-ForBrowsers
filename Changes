@@ -1,3 +1,9 @@
+0.02   2009-04-20
+
+- This version will work warnings-free with Catalyst 5.7x and
+  5.8x.
+
+
 0.01   2008-03-02
 
 - First version, released on an unsuspecting world.

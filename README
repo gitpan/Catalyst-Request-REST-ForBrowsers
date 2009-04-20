@@ -26,7 +26,8 @@ METHODS
     This class provides the following methods:
 
   $request->method()
-    This method works just like "Catalyst::Request->method()" except it
+
+    This method works just like `Catalyst::Request->method()' except it
     allows for tunneling of PUT and DELETE requests via a POST.
 
     Specifically, you can provide a form element named "x-tunneled-method"
@@ -34,6 +35,7 @@ METHODS
     a POST, not a GET.
 
   $request->looks_like_browser()
+
     This method provides a heuristic to say whether or not the request
     appears to come from a browser. You can use this however you want. I
     usually use it to determine whether or not to give the client a full
@@ -47,9 +49,9 @@ METHODS
         assumption is that if you're doing XHR, you don't want the request
         treated as if it comes from a browser.
 
-    *   If the client provides makes a GET request with a query string
-        parameter "content-type", and that type is *not* an HTML type, it is
-        *not* a browser.
+    *   If the client makes a GET request with a query string parameter
+        "content-type", and that type is *not* an HTML type, it is *not* a
+        browser.
 
     *   If the client provides an Accept header which includes "*/*" as an
         accepted content type, the client is a browser. Specifically, it is
@@ -66,16 +68,16 @@ METHODS
     meets your expectations before using it.
 
 AUTHOR
-    Dave Rolsky, "<autarch@urth.org>"
+    Dave Rolsky, `<autarch@urth.org>'
 
 BUGS
     Please report any bugs or feature requests to
-    "bug-catalyst-request-rest-forbrowsers@rt.cpan.org", or through the web
-    interface at <http://rt.cpan.org>. I will be notified, and then you'll
+    `bug-catalyst-request-rest-forbrowsers@rt.cpan.org', or through the web
+    interface at http://rt.cpan.org. I will be notified, and then you'll
     automatically be notified of progress on your bug as I make changes.
 
 COPYRIGHT & LICENSE
-    Copyright 2008 Dave Rolsky, All Rights Reserved.
+    Copyright 2008-2009 Dave Rolsky, All Rights Reserved.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
