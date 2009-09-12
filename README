@@ -5,6 +5,8 @@ NAME
 SYNOPSIS
         package MyApp;
 
+        use Catalyst::Request::REST::ForBrowsers;
+
         MyApp->request_class( 'Catalyst::Request::REST::ForBrowsers' );
 
 DESCRIPTION
@@ -13,8 +15,8 @@ DESCRIPTION
     workarounds. This module provides those workarounds for you.
 
     Specifically, it lets you do two things. First, it lets you "tunnel" PUT
-    and DELETE requests across a POST, since browser do not support PUT or
-    DELETE actions.
+    and DELETE requests across a POST, since most browsers do not support
+    PUT or DELETE actions (as of early 2009, at least).
 
     Second, it provides a heuristic to check if the client is a web browser,
     regardless of what content types it claims to accept. The reason for
@@ -26,7 +28,6 @@ METHODS
     This class provides the following methods:
 
   $request->method()
-
     This method works just like `Catalyst::Request->method()' except it
     allows for tunneling of PUT and DELETE requests via a POST.
 
@@ -34,8 +35,10 @@ METHODS
     which can override the request method for a POST. This *only* works for
     a POST, not a GET.
 
-  $request->looks_like_browser()
+    You can also use a header named "x-http-method-override" instead (Google
+    uses this header for its APIs).
 
+  $request->looks_like_browser()
     This method provides a heuristic to say whether or not the request
     appears to come from a browser. You can use this however you want. I
     usually use it to determine whether or not to give the client a full
@@ -60,7 +63,7 @@ METHODS
     *   If the client provides an Accept header and accepts either
         "text/html" or "application/xhtml+xml" it is a browser.
 
-    *   Otherwise, if it provides an Accept header, it is *not* a browser.
+    *   If it provides an Accept header of any sort, it is *not* a browser.
 
     *   The default is that the client is a browser.
 

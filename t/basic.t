@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 19;
 
 use HTTP::Headers;
 use Catalyst::Request::REST::ForBrowsers;
@@ -29,7 +29,20 @@ use Catalyst::Request::REST::ForBrowsers;
         $req->parameters( { 'x-tunneled-method' => $method } );
 
         is( $req->method(), $method,
-            "$method - tunneled" );
+            "$method - tunneled with x-tunneled-method param" );
+    }
+}
+
+{
+    for my $method ( qw( PUT DELETE ) )
+    {
+        my $req = Catalyst::Request::REST::ForBrowsers->new();
+        $req->method('POST');
+        $req->{_context} = 'MockContext';
+        $req->header( 'x-http-method-override' => $method );
+
+        is( $req->method(), $method,
+            "$method - tunneled with x-http-method-override header" );
     }
 }
 

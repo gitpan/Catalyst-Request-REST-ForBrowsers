@@ -9,7 +9,7 @@ use Moose;
 
 extends 'Catalyst::Request::REST';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 sub method
@@ -25,13 +25,19 @@ sub method
 
     return $method unless $method && uc $method eq 'POST';
 
-    my $tunneled = $self->param('x-tunneled-method');
+    my $tunneled =
+           $self->param('x-tunneled-method')
+        || $self->header('x-http-method-override');
 
     return $self->{__method} = $tunneled ? uc $tunneled : $method;
 }
 
 {
-    my %HTMLTypes = map { $_ => 1 } qw( text/html application/xhtml+xml );
+    my %HTMLTypes =
+        map { $_ => 1 }
+        qw( text/html
+            application/xhtml+xml
+          );
 
     sub looks_like_browser
     {
@@ -83,6 +89,8 @@ Catalyst::Request::REST::ForBrowsers - A Catalyst::Request::REST subclass for de
 
     package MyApp;
 
+    use Catalyst::Request::REST::ForBrowsers;
+
     MyApp->request_class( 'Catalyst::Request::REST::ForBrowsers' );
 
 =head1 DESCRIPTION
@@ -92,8 +100,8 @@ support web browsers, you're probably going to need some hackish
 workarounds. This module provides those workarounds for you.
 
 Specifically, it lets you do two things. First, it lets you "tunnel"
-PUT and DELETE requests across a POST, since browser do not support
-PUT or DELETE actions.
+PUT and DELETE requests across a POST, since most browsers do not
+support PUT or DELETE actions (as of early 2009, at least).
 
 Second, it provides a heuristic to check if the client is a web
 browser, regardless of what content types it claims to accept. The
@@ -113,6 +121,9 @@ it allows for tunneling of PUT and DELETE requests via a POST.
 Specifically, you can provide a form element named "x-tunneled-method"
 which can override the request method for a POST. This I<only> works
 for a POST, not a GET.
+
+You can also use a header named "x-http-method-override" instead (Google uses
+this header for its APIs).
 
 =head2 $request->looks_like_browser()
 
@@ -152,7 +163,7 @@ or "application/xhtml+xml" it is a browser.
 
 =item *
 
-Otherwise, if it provides an Accept header, it is I<not> a browser.
+If it provides an Accept header of any sort, it is I<not> a browser.
 
 =item *
 
